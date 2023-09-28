@@ -3,4 +3,4 @@ import pythonDoc
 
 if __name__ == "__main__":
     doc = pythonDoc.buildDoc()
-    print RSTWriter.write(doc).getvalue()
+    print((RSTWriter.write(doc).getvalue()))

@@ -22,7 +22,7 @@ decodeTable = {
     235: 9123, 236: 9127, 237: 9128, 238: 9129, 239: 9130, 241: 12297, 242: 8747, 243: 8992, 244: 9134, 245: 8993, 246: 9118,
     247: 9119, 248: 9120, 249: 9124, 250: 9125, 251: 9126, 252: 9131, 253: 9132, 254: 9133}
 
-encodeTable = dict((v, k) for (k, v) in decodeTable.iteritems())
+encodeTable = dict((v, k) for (k, v) in list(decodeTable.items()))
 
 ERROR_STRING = "Ordinal not in range (255)"
 
@@ -33,10 +33,10 @@ def symbol_decode(input, errors='strict'):
             chars.append(decodeTable[ord(c)])
         except KeyError:
             if errors == 'replace':
-                chars.append(ord(u'?'))
+                chars.append(ord('?'))
             else:
                 raise UnicodeDecodeError("symbol", input, i, i+1, ERROR_STRING)
-    return (u"".join(map(unichr, chars)), len(input))
+    return ("".join(map(chr, chars)), len(input))
             
 
 def symbol_encode(input, errors='strict'):

@@ -3,4 +3,4 @@ import pythonDoc
 
 doc = pythonDoc.buildDoc()
 
-print Rtf15Writer.write(doc).getvalue()
+print((Rtf15Writer.write(doc).getvalue()))

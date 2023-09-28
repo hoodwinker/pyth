@@ -6,11 +6,11 @@ http://www.biblioscape.com/rtf15_spec.htm
 This module is potentially compatible with RTF versions up to 1.9.1,
 but may not ignore all necessary control groups.
 """
-import string, re, itertools, struct
+import re
+import string
 
 from pyth import document
 from pyth.format import PythReader
-from pyth.encodings import symbol
 
 _CONTROLCHARS = set(string.ascii_letters + string.digits + "-*")
 _DIGITS = set(string.digits + "-")
@@ -233,7 +233,7 @@ class DocBuilder(object):
         else:
             self.block.content.append(
                 document.Text(self.propStack[-1].copy(),
-                              [u"".join(self.run)]))
+                              ["".join(self.run)]))
 
         self.run[:] = []
 
@@ -527,9 +527,9 @@ class Group(object):
         if isinstance(self.charset, dict):
             uni_code = self.charset.get(code)
             if uni_code is None:
-                char = u'?'
+                char = '?'
             else:
-                char = unichr(uni_code)
+                char = chr(uni_code)
 
         else:
             char = chr(code)
@@ -543,13 +543,13 @@ class Group(object):
     def handle_control_symbol(self, symbol):
         # Ignore ~, -, and _, since they are optional crap.
         if symbol in '\\{}':
-            self.content.append(unicode(symbol))
+            self.content.append(str(symbol))
 
 
     def handle_u(self, codepoint):
         codepoint = int(codepoint)
         try:
-            char = unichr(codepoint % 2**16)
+            char = chr(codepoint % 2**16)
         except ValueError:
             if self.reader.errors == 'replace':
                 char = '?'
@@ -578,7 +578,7 @@ class Group(object):
 
 
     def handle_line(self):
-        self.content.append(u"\n")
+        self.content.append("\n")
 
 
     def handle_b(self, onOff=None):
@@ -628,28 +628,28 @@ class Group(object):
         self.content.append(ReadableMarker("sub", True))
 
     def handle_emdash(self):
-        self.content.append(u'\u2014')
+        self.content.append('\\u2014')
 
     def handle_endash(self):
-        self.content.append(u'\u2013')
+        self.content.append('\\u2013')
 
     def handle_lquote(self):
-        self.content.append(u'\u2018')
+        self.content.append('\\u2018')
 
     def handle_rquote(self):
-        self.content.append(u'\u2019')
+        self.content.append('\\u2019')
 
     def handle_ldblquote(self):
-        self.content.append(u'\u201C')
+        self.content.append('\\u201C')
 
     def handle_rdblquote(self):
-        self.content.append(u'\u201D')
+        self.content.append('\\u201D')
 
     def handle_tab(self):
-        self.content.append(u'\t')
+        self.content.append('\t')
 
     def handle_trowd(self):
-        self.content.append(u'\n')
+        self.content.append('\n')
         
     #Handle the image tag
     def handle_pict(self):
@@ -662,7 +662,7 @@ class Group(object):
     def handle_field(self):
         def finalize():
             if len(self.content) != 2:
-                return u""
+                return ""
 
             destination, content = self.content
 
@@ -671,17 +671,17 @@ class Group(object):
             # Except when it isn't, like this:
             # {\field{\*\fldinst {\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid15420660  PAGE   \\* MERGEFORMAT }}
             try:
-                destination = u"".join(destination.content)
+                destination = "".join(destination.content)
             except:
-                return u""
+                return ""
 
-            match = re.match(ur'HYPERLINK "(.*)"', destination)
+            match = re.match(r'HYPERLINK "(.*)"', destination)
             if match:
                 content.skip = False
                 self.content = [ReadableMarker("url", match.group(1)),
                                 content]
             else:
-                return u""
+                return ""
 
         self.finalize = finalize
 

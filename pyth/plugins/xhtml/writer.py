@@ -7,7 +7,7 @@ Render documents as XHTML fragments
 from pyth import document
 from pyth.format import PythWriter
 
-from cStringIO import StringIO
+from io import StringIO
 
 
 _tagNames = {
@@ -120,7 +120,7 @@ class XHTMLWriter(PythWriter):
                     current = newTag
                 current.attrs['style'] = "vertical-align: %s; font-size: smaller" % prop
 
-        current.content.append(u"".join(text.content))
+        current.content.append("".join(text.content))
 
         return tag
 
@@ -160,7 +160,7 @@ class Tag(object):
     def attrString(self):
         return " ".join(
             '%s="%s"' % (k, quoteAttr(v))
-            for (k, v) in self.attrs.iteritems())
+            for (k, v) in list(self.attrs.items()))
             
 
     def __repr__(self):
@@ -170,12 +170,12 @@ class Tag(object):
 
 def quoteText(text):
     return text.replace(
-        u"&", u"&amp;").replace(
-        u"<", u"&lt;").replace(
-        u">", u"&gt;")
+        "&", "&amp;").replace(
+        "<", "&lt;").replace(
+        ">", "&gt;")
 
 
 def quoteAttr(text):
     return quoteText(text).replace(
-        u'"', u"&quot;").replace(
-        u"'", u"&apos;")
+        '"', "&quot;").replace(
+        "'", "&apos;")

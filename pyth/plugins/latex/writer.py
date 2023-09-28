@@ -5,10 +5,10 @@ For the moment we generate the latex document from the
 reStructuredText writer output.
 """
 
-from cStringIO import StringIO
+from io import StringIO
+
 import docutils.core
 
-from pyth import document
 from pyth.format import PythWriter
 from pyth.plugins.rst.writer import RSTWriter
 

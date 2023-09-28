@@ -7,7 +7,7 @@ http://www.biblioscape.com/rtf15_spec.htm
 from pyth import document
 from pyth.format import PythWriter
 
-from cStringIO import StringIO
+from io import StringIO
 
 
 # XXX Todo -- Make these parameters
@@ -97,7 +97,7 @@ class Rtf15Writer(PythWriter):
 
     def _getFontTable(self):
         output = [r'{\fonttbl']
-        for i, (fontFamily, fontName) in enumerate(self.fonts.iteritems()):
+        for i, (fontFamily, fontName) in enumerate(self.fonts.items()):
             output.append(r'{\f%d\f%s %s;}' % (i, fontFamily, fontName))
             if fontFamily == self.fontFamily:
                 self.fontNumber = i
@@ -234,7 +234,7 @@ class Rtf15Writer(PythWriter):
         props = []
 
         if 'super' in text.properties:
-            self.target.write('{\up9 ')
+            self.target.write('{\\up9 ')
         elif 'sub' in text.properties:
             self.target.write('{\dn9 ')
 

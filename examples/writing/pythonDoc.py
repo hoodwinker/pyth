@@ -1,34 +1,34 @@
 # -*- coding: utf-8 -*-
+from pyth.plugins.python.reader import P, PythonReader, ITALIC, BOLD, T, L, LE
 
-from pyth.plugins.python.reader import *
 
 def buildDoc():
-    return PythonReader.read((        
-      P [
-       T(ITALIC, BOLD) [ u"Hello World" ],
-       u", hee hee hee! ", T(url=u'http://www.google.com') [ u"This seems to work" ]
-      ],
-      L [
-       [unicode(word) for word in ("One", "Two", "Three", "Four")]
-      ],
-      L [
-        u"Introduction",
-        LE [
-          u"First sentence in the\nsub-section",
-          u"Also some other stuff",
-          L [
-            u"Alpha",
-            L [
-              u"Beta\nWhomble",
-              LE [ u"Beta", u"Whoop\nWhoa" ],
-              u"Beta",
-            ],
-            u"Gamma",
-            u"Gamma",
-          ],
-          u"Final sentence in the sub-section",
+    return PythonReader.read((
+        P[
+            T(ITALIC, BOLD)["Hello World"],
+            ", hee hee hee! ", T(url='http://www.google.com')["This seems to work"]
         ],
-        T(BOLD) [ u"Conclusion" ],
-      ],
-      u"That's all, folks! 再見!"
+        L[
+            [str(word) for word in ("One", "Two", "Three", "Four")]
+        ],
+        L[
+            "Introduction",
+            LE[
+                "First sentence in the\nsub-section",
+                "Also some other stuff",
+                L[
+                    "Alpha",
+                    L[
+                        "Beta\nWhomble",
+                        LE["Beta", "Whoop\nWhoa"],
+                        "Beta",
+                    ],
+                    "Gamma",
+                    "Gamma",
+                ],
+                "Final sentence in the sub-section",
+            ],
+            T(BOLD)["Conclusion"],
+        ],
+        "That's all, folks! 再見!"
     ))

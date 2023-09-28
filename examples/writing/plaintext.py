@@ -3,4 +3,4 @@ import pythonDoc
 
 doc = pythonDoc.buildDoc()
 
-print PlaintextWriter.write(doc).getvalue()
+print((PlaintextWriter.write(doc).getvalue()))

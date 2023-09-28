@@ -8,4 +8,4 @@ else:
 
 doc = Rtf15Reader.read(open(filename, "rb"))
 
-print [x.content for x in doc.content]
+print([x.content for x in doc.content])

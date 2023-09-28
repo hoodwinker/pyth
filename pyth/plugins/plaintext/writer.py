@@ -5,7 +5,7 @@ Render documents as plaintext.
 from pyth import document
 from pyth.format import PythWriter
 
-from cStringIO import StringIO
+from io import StringIO
 
 class PlaintextWriter(PythWriter):
 
@@ -46,8 +46,8 @@ class PlaintextWriter(PythWriter):
     def paragraph(self, paragraph, prefix=""):
         content = []
         for text in paragraph.content:
-            content.append(u"".join(text.content))
-        content = u"".join(content).encode("utf-8")
+            content.append("".join(text.content))
+        content = "".join(content).encode("utf-8")
             
         for line in content.split("\n"):
             self.target.write("  " * self.indent)

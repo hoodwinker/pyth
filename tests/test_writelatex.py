@@ -3,11 +3,6 @@ unit tests of the latex writer
 """
 
 import unittest
-import subprocess
-import tempfile
-import os
-import sys
-import BeautifulSoup
 
 from pyth.plugins.latex.writer import LatexWriter
 from pyth.plugins.python.reader import *
@@ -26,17 +21,17 @@ class TestWriteLatex(unittest.TestCase):
         """
         Try a single paragraph document
         """
-        doc = PythonReader.read(P[u"the text"])
+        doc = PythonReader.read(P["the text"])
         latex = LatexWriter.write(doc).getvalue()
         assert "the text" in latex
 
     def test_bold(self):
-        doc = PythonReader.read([P[T(BOLD)[u"bold text"]]])
+        doc = PythonReader.read([P[T(BOLD)["bold text"]]])
         latex = LatexWriter.write(doc).getvalue()
         assert r"\textbf{bold text}" in latex, latex
 
     def test_italic(self):
-        doc = PythonReader.read([P[T(ITALIC)[u"italic text"]]])
+        doc = PythonReader.read([P[T(ITALIC)["italic text"]]])
         latex = LatexWriter.write(doc).getvalue()
         assert r"\emph{italic text}" in latex, latex
 

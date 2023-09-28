@@ -2,12 +2,12 @@
 unit tests of the pdf writer
 """
 
-import unittest
+import os
 import subprocess
 import tempfile
-import os
-import sys
-import BeautifulSoup
+import unittest
+
+from bs4 import BeautifulSoup
 
 from pyth.plugins.pdf.writer import PDFWriter
 from pyth.plugins.python.reader import *
@@ -35,7 +35,7 @@ class TestWritePDF(unittest.TestCase):
             try:
                 proc = subprocess.Popen(command, stdout=subprocess.PIPE)
             except OSError:
-                print "Make sure that pdftohtml is installed"
+                print("Make sure that pdftohtml is installed")
                 raise
             ret = proc.communicate()[0]
             return ret
@@ -55,13 +55,13 @@ class TestWritePDF(unittest.TestCase):
         """
         Try a simple document with one paragraph
         """
-        doc = PythonReader.read(P[u"the text"])
+        doc = PythonReader.read(P["the text"])
         pdf = PDFWriter.write(doc).getvalue()
         html = self.pdf_to_html(pdf)
         assert "the text" in html
 
     def test_bold(self):
-        doc = PythonReader.read([P[T(BOLD)[u"bold text"]]])
+        doc = PythonReader.read([P[T(BOLD)["bold text"]]])
         pdf = PDFWriter.write(doc).getvalue()
         html = self.pdf_to_html(pdf)
         soup = BeautifulSoup.BeautifulSoup(html)
@@ -70,7 +70,7 @@ class TestWritePDF(unittest.TestCase):
         assert node.string == "bold text"
 
     def test_italic(self):
-        doc = PythonReader.read([P[T(ITALIC)[u"italic text"]]])
+        doc = PythonReader.read([P[T(ITALIC)["italic text"]]])
         pdf = PDFWriter.write(doc).getvalue()
         html = self.pdf_to_html(pdf)
         soup = BeautifulSoup.BeautifulSoup(html)
@@ -79,15 +79,15 @@ class TestWritePDF(unittest.TestCase):
         assert node.string == "italic text"
 
     def test_latex(self):
-        doc = PythonReader.read(P[u"the-text"])
+        doc = PythonReader.read(P["the-text"])
         pdf = PDFWriter.write(doc).getvalue()
         html = self.pdf_to_html(pdf)
         assert "the-text" in html, html
 
     def test_rst(self):
-        doc = PythonReader.read(P[u"the-text"])
+        doc = PythonReader.read(P["the-text"])
         pdf = PDFWriter.write(doc).getvalue()
-        print pdf
+        print(pdf)
         html = self.pdf_to_html(pdf)
         assert "the-text" in html, html
 

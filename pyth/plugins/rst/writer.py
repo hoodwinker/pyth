@@ -5,7 +5,7 @@ Render documents as reStructuredText.
 from pyth import document
 from pyth.format import PythWriter
 
-from cStringIO import StringIO
+from io import StringIO
 
 
 class RSTWriter(PythWriter):
@@ -41,17 +41,17 @@ class RSTWriter(PythWriter):
         """
         process a pyth text and return the formatted string
         """
-        ret = u"".join(text.content)
+        ret = "".join(text.content)
         if 'url' in text.properties:
-            return u"`%s`_" % ret
+            return "`%s`_" % ret
         if 'bold' in text.properties:
-            return u"**%s**" % ret
+            return "**%s**" % ret
         if 'italic' in text.properties:
-            return u"*%s*" % ret
+            return "*%s*" % ret
         if 'sub' in text.properties:
-            return ur"\ :sub:`%s`\ " % ret
+            return r"\ :sub:`%s`\ " % ret
         if 'super' in text.properties:
-            return ur"\ :sup:`%s`\ " % ret
+            return r"\ :sup:`%s`\ " % ret
         return ret
 
     def paragraph(self, paragraph, prefix=""):
@@ -61,7 +61,7 @@ class RSTWriter(PythWriter):
         content = []
         for text in paragraph.content:
             content.append(self.text(text))
-        content = u"".join(content).encode("utf-8")
+        content = "".join(content).encode("utf-8")
 
         for line in content.split("\n"):
             self.target.write("  " * self.indent)
@@ -76,7 +76,7 @@ class RSTWriter(PythWriter):
             self.target.write("\n")
             for text in paragraph.content:
                 if 'url' in text.properties:
-                    string = u"".join(text.content)
+                    string = "".join(text.content)
                     url = text.properties['url']
                     self.target.write(".. _%s: %s\n" % (string, url))
 

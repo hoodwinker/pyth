@@ -2,7 +2,7 @@
 Read documents from xhtml
 """
 
-import BeautifulSoup
+from bs4 import BeautifulSoup
 
 from pyth import document
 from pyth.format import PythReader
@@ -53,15 +53,15 @@ class XHTMLReader(PythReader):
         # Join the block elements lines into a single long line
         for tag in ['p', 'li']:
             for node in soup.findAll(tag):
-                text = unicode(node)
+                text = str(node)
                 lines = [x.strip() for x in text.splitlines()]
                 text = ' '.join(lines)
                 node.replaceWith(BeautifulSoup.BeautifulSoup(text))
-        soup = BeautifulSoup.BeautifulSoup(unicode(soup))
+        soup = BeautifulSoup.BeautifulSoup(str(soup))
         # replace all <br/> tag by newline character
         for node in soup.findAll('br'):
             node.replaceWith("\n")
-        soup = BeautifulSoup.BeautifulSoup(unicode(soup))
+        soup = BeautifulSoup.BeautifulSoup(str(soup))
         return soup
 
     def is_bold(self, node):

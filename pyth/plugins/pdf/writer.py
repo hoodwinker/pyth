@@ -2,16 +2,15 @@
 Render documents as Reportlab PDF stories
 """
 
-from cStringIO import StringIO
-import cgi # For escape()
+import cgi  # For escape()
+from io import StringIO
+
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+from reportlab.platypus import SimpleDocTemplate, Paragraph
 
 from pyth import document
 from pyth.format import PythWriter
-
-from reportlab.platypus import SimpleDocTemplate, Paragraph
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.pagesizes import A4
-from reportlab.lib.units import inch
 
 _tagNames = {'bold': 'b',
              'italic': 'i',
@@ -67,24 +66,24 @@ class PDFWriter(PythWriter):
 
 
     def _paragraph(self, paragraph, level=0, bulletText=None):
-        text = u"".join(self._text(t) for t in paragraph.content)
+        text = "".join(self._text(t) for t in paragraph.content)
         self.paragraphs.append(Paragraph(text, self.paragraphStyle, bulletText=bulletText))
 
 
     def _text(self, text):
-        content = cgi.escape(u"".join(text.content))
+        content = cgi.escape("".join(text.content))
 
         tags = []
-        for prop, value in text.properties.items():
+        for prop, value in list(text.properties.items()):
             if prop == "url":
-                tags.append((u'<u><link destination="%s" color="blue">' % value, u"</link></u>"))
+                tags.append(('<u><link destination="%s" color="blue">' % value, "</link></u>"))
             if prop in _tagNames:
                 tag = _tagNames[prop]
-                tags.append((u"<%s>" % tag, u"</%s>" % tag))
+                tags.append(("<%s>" % tag, "</%s>" % tag))
 
-        open_tags = u"".join(tag[0] for tag in tags)
-        close_tags = u"".join(tag[1] for tag in reversed(tags))
-        return u"%s%s%s" % (open_tags, content, close_tags)
+        open_tags = "".join(tag[0] for tag in tags)
+        close_tags = "".join(tag[1] for tag in reversed(tags))
+        return "%s%s%s" % (open_tags, content, close_tags)
 
 
     def _list(self, plist, level=0, bulletText=None):

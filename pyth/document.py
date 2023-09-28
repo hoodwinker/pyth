@@ -1,19 +1,28 @@
 """
 Abstract document representation
 """
+from abc import ABC
 
-class _PythBase(object):
 
-    def __init__(self, properties={}, content=[]):
+class _PythBase(ABC):
+
+    validProperties = ()
+    contentType = None
+
+    def __init__(self, properties=None, content=None):
+        if properties is None:
+            properties = {}
+        if content is None:
+            content = []
+
         self.properties = {}
         self.content = []
-        
-        for (k,v) in properties.iteritems():
+
+        for (k, v) in list(properties.items()):
             self[k] = v
 
         for item in content:
             self.append(item)
-
 
     def __setitem__(self, key, value):
         if key not in self.validProperties:
@@ -51,7 +60,7 @@ class _PythBase(object):
                     okay = False
             else:
                 okay = False
-                
+
         if not okay:
             raise TypeError("Wrong content type for %s: %s (%s)" % (
                 self.__class__.__name__, repr(type(item)), repr(item)))
@@ -70,7 +79,10 @@ class Text(_PythBase):
     """
 
     validProperties = ('bold', 'italic', 'underline', 'url', 'sub', 'super', 'strike')
-    contentType = unicode
+    contentType = str
+
+    def __init__(self, properties=None, content=None):
+        super().__init__(properties, content)
 
     def __repr__(self):
         return "Text('%s' %s)" % ("".join("[%s]" % r.encode("utf-8") for r in self.content), self.properties)
@@ -89,20 +101,26 @@ class Paragraph(_PythBase):
     validProperties = ()
     contentType = Text
 
+    def __init__(self, properties=None, content=None):
+        super().__init__(properties, content)
+
 
 class Image(Paragraph):
     """
     An image is stored in bytes. All properties of images from the rtf definition are allowed.
     """
-    
-    validProperties = ('emfblip', 'pngblip', 'jpegblip', 'macpict', 'pmmetafile', 'wmetafile', 'dibitmap', 
-                       'wbitmap', 'wbmbitspixel', 'wbmplanes', 'wbmwidthbytes', 'picw', 'pich', 'picwgoal', 
-                       'pichgoal', 'picscalex', 'picscaley', 'picscaled', 'piccropt', 'piccropb', 'piccropr', 
+
+    validProperties = ('emfblip', 'pngblip', 'jpegblip', 'macpict', 'pmmetafile', 'wmetafile', 'dibitmap',
+                       'wbitmap', 'wbmbitspixel', 'wbmplanes', 'wbmwidthbytes', 'picw', 'pich', 'picwgoal',
+                       'pichgoal', 'picscalex', 'picscaley', 'picscaled', 'piccropt', 'piccropb', 'piccropr',
                        'piccropl', 'picbmp', 'picbpp', 'bin', 'blipupi', 'blipuid', 'bliptag', 'wbitmap')
     contentType = bytes
 
+    def __init__(self, properties=None, content=None):
+        super().__init__(properties, content)
+
     def __repr__(self):
-        return "Image(%d bytes, %s)" %(len(self.content[0])/2,self.properties)
+        return "Image(%d bytes, %s)" % (len(self.content[0]) / 2, self.properties)
 
 
 class ListEntry(_PythBase):
@@ -122,7 +140,6 @@ class List(Paragraph):
 
     validProperties = ()
     contentType = ListEntry
-    
 
 
 class Document(_PythBase):
@@ -130,6 +147,9 @@ class Document(_PythBase):
     Top-level item. One document is exactly one file.
     Documents consist of a list of paragraphs.
     """
-    
+
     validProperties = ('title', 'subject', 'author')
     contentType = Paragraph
+
+    def __init__(self, properties=None, content=None):
+        super().__init__(properties, content)
